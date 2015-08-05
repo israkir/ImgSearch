@@ -1,6 +1,7 @@
 package com.hakkicaner.imgsearch.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -60,12 +61,16 @@ public class SearchActivity extends ActionBarActivity {
 
     public void onImageSearch(View v) {
         String query = etQuery.getText().toString();
-        String url = buildUrl(query);
+        SharedPreferences searchSettings = getSharedPreferences(SettingsActivity.SEARCH_SETTINGS, MODE_PRIVATE);
+        String imgsize = searchSettings.getString("imgsz", "");
+        String imgcolor = searchSettings.getString("imgcolor", "");
+        String imgtype = searchSettings.getString("imgtype", "");
+        String site = searchSettings.getString("site", "");
+        String url = buildUrl(query, imgsize, imgcolor, imgtype, site);
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(url, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("DEBUG", "response: " + response);
                 JSONArray imageResultsJson;
                 try {
                     imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
@@ -78,7 +83,7 @@ public class SearchActivity extends ActionBarActivity {
         });
     }
 
-    private String buildUrl(String query) {
+    private String buildUrl(String query, String imgsz, String imgcolor, String imgtype, String site) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
                 .authority("ajax.googleapis.com")
@@ -88,8 +93,18 @@ public class SearchActivity extends ActionBarActivity {
                 .appendPath("images")
                 .appendQueryParameter("v", "1.0")
                 .appendQueryParameter("rsz", "8")
-                .appendQueryParameter("q", query);
+                .appendQueryParameter("q", query)
+                .appendQueryParameter("imgsz", imgsz)
+                .appendQueryParameter("imgcolor", imgcolor)
+                .appendQueryParameter("imgtype", imgtype)
+                .appendQueryParameter("as_sitesearch", site);
+        Log.d("url: ", builder.build().toString());
         return builder.build().toString();
+    }
+
+    private void openSettings() {
+        Intent intent = new Intent(SearchActivity.this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -108,6 +123,7 @@ public class SearchActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            openSettings();
             return true;
         }
 
