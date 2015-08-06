@@ -16,4 +16,5 @@
     <string name="reset">Reset</string>
     <string name="no_network">Network not available</string>
     <string name="no_data">No result for your query</string>
+    <string name="share_fail">Sharing failed</string>
 </resources>
