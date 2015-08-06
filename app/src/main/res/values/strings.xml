@@ -14,4 +14,6 @@
     <string name="saved">Saved</string>
     <string name="save">Save</string>
     <string name="reset">Reset</string>
+    <string name="no_network">Network not available</string>
+    <string name="no_data">No result for your query</string>
 </resources>

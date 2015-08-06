@@ -21,16 +21,8 @@ The following **required** functionality is completed:
 
 The following **optional** features are implemented:
 
-* [ ] Implements robust error handling, [check if internet is available](http://guides.codepath.com/android/Sending-and-Managing-Network-Requests#checking-for-network-connectivity), handle error cases, network failures
-* [ ] Used the **ActionBar SearchView** or custom layout as the query box instead of an EditText
+* [x] Implements check network and response data availability handling
 * [ ] User can **share an image** to their friends or email it to themselves
-* [ ] Replaced Filter Settings Activity with a lightweight modal overlay
-* [ ] Improved the user interface and experiment with image assets and/or styling and coloring
-
-The following **bonus** features are implemented:
-
-* [ ] Used the [StaggeredGridView](https://github.com/f-barth/AndroidStaggeredGrid) to display improve the grid of image results
-* [ ] User can [zoom or pan images](https://github.com/MikeOrtiz/TouchImageView) displayed in full-screen detail view
 
 
 ## Video Walkthrough 

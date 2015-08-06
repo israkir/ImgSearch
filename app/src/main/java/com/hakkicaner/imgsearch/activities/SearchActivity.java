@@ -1,7 +1,10 @@
 package com.hakkicaner.imgsearch.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -13,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.hakkicaner.imgsearch.R;
 import com.hakkicaner.imgsearch.adapters.ImageResultsAdapter;
@@ -74,8 +78,10 @@ public class SearchActivity extends ActionBarActivity {
         });
 
         String lastQuery = searchSettings.getString("last_query", "");
-        etQuery.setText(lastQuery);
-        search(lastQuery, 0);
+        if (lastQuery.length() > 0) {
+            etQuery.setText(lastQuery);
+            search(lastQuery, 0);
+        }
         Log.d("last query", lastQuery);
 
     }
@@ -95,21 +101,28 @@ public class SearchActivity extends ActionBarActivity {
     }
 
     public void search(String query, int page) {
-        setSearchSettings();
-        String url = buildUrl(query, String.valueOf(page), imgsize, imgcolor, imgtype, site);
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get(url, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                JSONArray imageResultsJson;
-                try {
-                    imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
-                    aImageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        if (isNetworkAvailable()) {
+            setSearchSettings();
+            String url = buildUrl(query, String.valueOf(page), imgsize, imgcolor, imgtype, site);
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get(url, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    JSONArray imageResultsJson;
+                    try {
+                        imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
+                        if (imageResultsJson.length() == 0) {
+                            Toast.makeText(getBaseContext(), R.string.no_data, Toast.LENGTH_SHORT).show();
+                        }
+                        aImageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            Toast.makeText(this, R.string.no_network, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setSearchSettings() {
@@ -138,6 +151,13 @@ public class SearchActivity extends ActionBarActivity {
                 .appendQueryParameter("as_sitesearch", site);
         Log.d("url: ", builder.build().toString());
         return builder.build().toString();
+    }
+
+    private Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
     private void openSettings() {
