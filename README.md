@@ -22,7 +22,7 @@ The following **required** functionality is completed:
 The following **optional** features are implemented:
 
 * [x] Implements check network and response data availability handling
-* [ ] User can **share an image** to their friends or email it to themselves
+* [x] User can **share an image** via mms
 
 
 ## Video Walkthrough 
