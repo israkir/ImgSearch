@@ -2,8 +2,11 @@ package com.hakkicaner.imgsearch.activities;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -76,6 +79,8 @@ public class SettingsActivity extends Activity {
         editor.commit();
 
         Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
+
+        finish();
     }
 
     public void onReset(View v) {

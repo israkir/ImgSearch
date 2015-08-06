@@ -15,6 +15,7 @@ import android.widget.GridView;
 
 import com.hakkicaner.imgsearch.R;
 import com.hakkicaner.imgsearch.adapters.ImageResultsAdapter;
+import com.hakkicaner.imgsearch.listeners.EndlessScrollListener;
 import com.hakkicaner.imgsearch.models.ImageResult;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -24,7 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -34,6 +34,11 @@ public class SearchActivity extends ActionBarActivity {
     private GridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter aImageResults;
+    private SharedPreferences searchSettings;
+    String imgsize;
+    String imgcolor;
+    String imgtype;
+    String site;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,9 @@ public class SearchActivity extends ActionBarActivity {
     private void setupViews() {
         etQuery = (EditText) findViewById(R.id.etQuery);
         gvResults = (GridView) findViewById(R.id.gvResults);
+
+        setSearchSettings();
+
         gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -57,16 +65,28 @@ public class SearchActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+        gvResults.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                loadMore(page);
+            }
+        });
+    }
+
+    private void loadMore(int page) {
+        String query = etQuery.getText().toString();
+        search(query, page);
     }
 
     public void onImageSearch(View v) {
+        imageResults.clear();
         String query = etQuery.getText().toString();
-        SharedPreferences searchSettings = getSharedPreferences(SettingsActivity.SEARCH_SETTINGS, MODE_PRIVATE);
-        String imgsize = searchSettings.getString("imgsz", "");
-        String imgcolor = searchSettings.getString("imgcolor", "");
-        String imgtype = searchSettings.getString("imgtype", "");
-        String site = searchSettings.getString("site", "");
-        String url = buildUrl(query, imgsize, imgcolor, imgtype, site);
+        search(query, 0);
+    }
+
+    public void search(String query, int page) {
+        setSearchSettings();
+        String url = buildUrl(query, String.valueOf(page), imgsize, imgcolor, imgtype, site);
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(url, new JsonHttpResponseHandler() {
             @Override
@@ -74,7 +94,6 @@ public class SearchActivity extends ActionBarActivity {
                 JSONArray imageResultsJson;
                 try {
                     imageResultsJson = response.getJSONObject("responseData").getJSONArray("results");
-                    imageResults.clear();
                     aImageResults.addAll(ImageResult.fromJsonArray(imageResultsJson));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -83,7 +102,15 @@ public class SearchActivity extends ActionBarActivity {
         });
     }
 
-    private String buildUrl(String query, String imgsz, String imgcolor, String imgtype, String site) {
+    private void setSearchSettings() {
+        searchSettings = getSharedPreferences(SettingsActivity.SEARCH_SETTINGS, MODE_PRIVATE);
+        imgsize = searchSettings.getString("imgsz", "");
+        imgcolor = searchSettings.getString("imgcolor", "");
+        imgtype = searchSettings.getString("imgtype", "");
+        site = searchSettings.getString("site", "");
+    }
+
+    private String buildUrl(String query, String start, String imgsz, String imgcolor, String imgtype, String site) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
                 .authority("ajax.googleapis.com")
@@ -94,6 +121,7 @@ public class SearchActivity extends ActionBarActivity {
                 .appendQueryParameter("v", "1.0")
                 .appendQueryParameter("rsz", "8")
                 .appendQueryParameter("q", query)
+                .appendQueryParameter("start", start)
                 .appendQueryParameter("imgsz", imgsz)
                 .appendQueryParameter("imgcolor", imgcolor)
                 .appendQueryParameter("imgtype", imgtype)

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:paddingTop="50dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -11,7 +12,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="81dp"
-        android:layout_marginStart="81dp" />
+        android:layout_marginStart="81dp"
+        android:textSize="15dp"
+        />
 
     <Spinner
         android:layout_width="wrap_content"
@@ -19,7 +22,8 @@
         android:id="@+id/sImageSize"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/tvImageSize"
-        android:layout_toEndOf="@+id/tvImageSize" />
+        android:layout_toEndOf="@+id/tvImageSize"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,7 +34,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="81dp"
-        android:layout_marginStart="81dp" />
+        android:layout_marginStart="81dp"
+        android:textSize="15dp"
+        android:layout_marginTop="50dp" />
 
     <Spinner
         android:layout_width="wrap_content"
@@ -38,7 +44,8 @@
         android:id="@+id/sColorFilter"
         android:layout_below="@+id/sImageSize"
         android:layout_toRightOf="@+id/tvColorFilter"
-        android:layout_toEndOf="@+id/tvColorFilter" />
+        android:layout_toEndOf="@+id/tvColorFilter"
+        android:layout_marginTop="50dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -49,15 +56,18 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="81dp"
-        android:layout_marginStart="81dp" />
+        android:layout_marginStart="81dp"
+        android:textSize="15dp"
+        android:layout_marginTop="50dp" />
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sImageType"
         android:layout_below="@+id/sColorFilter"
-        android:layout_toRightOf="@+id/tvImageType"
-        android:layout_toEndOf="@+id/tvImageType" />
+        android:layout_alignLeft="@+id/sColorFilter"
+        android:layout_alignStart="@+id/sColorFilter"
+        android:layout_marginTop="50dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -68,15 +78,22 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="81dp"
-        android:layout_marginStart="81dp" />
+        android:layout_marginStart="81dp"
+        android:textSize="15dp"
+        android:layout_marginTop="50dp" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/etSite"
-        android:layout_below="@+id/sImageType"
-        android:layout_toRightOf="@+id/tvSite"
-        android:layout_toEndOf="@+id/tvSite" />
+        android:width="20dp"
+        android:textSize="15dp"
+        android:layout_alignBottom="@+id/tvSite"
+        android:layout_alignLeft="@+id/sImageType"
+        android:layout_alignStart="@+id/sImageType"
+        android:layout_alignRight="@+id/btnReset"
+        android:layout_alignEnd="@+id/btnReset"
+        android:layout_marginTop="50dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -86,7 +103,8 @@
         android:onClick="onSave"
         android:layout_below="@+id/etSite"
         android:layout_alignLeft="@+id/tvSite"
-        android:layout_alignStart="@+id/tvSite" />
+        android:layout_alignStart="@+id/tvSite"
+        android:layout_marginTop="42dp" />
 
     <Button
         android:layout_width="wrap_content"
