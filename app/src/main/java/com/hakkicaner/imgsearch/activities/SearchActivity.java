@@ -73,15 +73,11 @@ public class SearchActivity extends ActionBarActivity {
             }
         });
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            if (extras.getBoolean("FilterSaved")) {
-                String lastQuery = searchSettings.getString("last_query", "");
-                etQuery.setText(lastQuery);
-                search(lastQuery, 0);
-                Log.d("last query", lastQuery);
-            }
-        }
+        String lastQuery = searchSettings.getString("last_query", "");
+        etQuery.setText(lastQuery);
+        search(lastQuery, 0);
+        Log.d("last query", lastQuery);
+
     }
 
     private void loadMore(int page) {
