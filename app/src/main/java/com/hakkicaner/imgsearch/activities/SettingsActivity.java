@@ -80,7 +80,9 @@ public class SettingsActivity extends Activity {
 
         Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
 
-        finish();
+        Intent intent = new Intent(SettingsActivity.this, SearchActivity.class);
+        intent.putExtra("FilterSaved", true);
+        startActivity(intent);
     }
 
     public void onReset(View v) {

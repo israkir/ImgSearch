@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 
@@ -71,6 +72,16 @@ public class SearchActivity extends ActionBarActivity {
                 loadMore(page);
             }
         });
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.getBoolean("FilterSaved")) {
+                String lastQuery = searchSettings.getString("last_query", "");
+                etQuery.setText(lastQuery);
+                search(lastQuery, 0);
+                Log.d("last query", lastQuery);
+            }
+        }
     }
 
     private void loadMore(int page) {
@@ -81,6 +92,9 @@ public class SearchActivity extends ActionBarActivity {
     public void onImageSearch(View v) {
         imageResults.clear();
         String query = etQuery.getText().toString();
+        SharedPreferences.Editor editor = searchSettings.edit();
+        editor.putString("last_query", query);
+        editor.commit();
         search(query, 0);
     }
 
